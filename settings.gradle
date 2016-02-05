@@ -1,0 +1,3 @@
+include ':sphere3'
+include ':stevelib'
+project(':stevelib').projectDir = new File('../AndPheiffLib/stevelib')
