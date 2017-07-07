@@ -9,6 +9,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/../AndPheiffLib/andPheiffLib" />
+            <option value="$PROJECT_DIR$/../AndPheiffLib/andpheifflibdemo" />
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/sphere3" />
           </set>

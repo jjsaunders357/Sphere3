@@ -1,3 +1,5 @@
 include ':sphere3'
 include ':andPheiffLib'
 project(':andPheiffLib').projectDir = new File('../AndPheiffLib/andPheiffLib')
+include ':andPheiffLibDemo'
+project(':andPheiffLibDemo').projectDir = new File('../AndPheiffLib/andPheiffLibDemo')
