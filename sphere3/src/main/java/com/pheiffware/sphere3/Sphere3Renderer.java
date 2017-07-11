@@ -49,9 +49,8 @@ public class Sphere3Renderer extends GameRenderer
     protected void onSurfaceCreated(AssetLoader al, GLCache glCache, SystemInfo systemInfo) throws GraphicsException
     {
         camera = new SphereCamera(90f, 1f, 1.01f, false);
-        camera.moveForward(-40.f);
+        camera.moveForward(-20.f);
         colorTechnique = new ColorMaterialTechnique(al);
-        //textureTechnique = new TextureMaterialTechnique(al);
         textureTechnique = new SphereTextureMaterialTechnique(al);
 
         lighting = new Lighting(new float[]{0.2f, 0.2f, 0.2f, 1.0f}, new float[]{-3, 3, 0, 1}, new float[]{1.0f, 1.0f, 1.0f, 1.0f});
@@ -72,7 +71,8 @@ public class Sphere3Renderer extends GameRenderer
             throw new RuntimeException("Failure", e);
         }
         GLES20.glEnable(GLES20.GL_DEPTH_TEST);
-        GLES20.glCullFace(GLES20.GL_BACK);
+        //Must use front given we look down the +z-axis in the neutral position (opposite of OpenGL standard).
+        GLES20.glCullFace(GLES20.GL_FRONT);
         GLES20.glEnable(GLES20.GL_CULL_FACE);
     }
 

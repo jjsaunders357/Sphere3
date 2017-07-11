@@ -24,10 +24,11 @@ void main()
 	positionEyeSpace = viewModelMatrix * vertexPosition4;
     //TODO: Optimize
 	gl_Position = vec4(
-	    positionEyeSpace.x * projectionScaleX,
+	    positionEyeSpace.x * projectionScaleX+projectionMaxDepth/10000.0,
 	    positionEyeSpace.y * projectionScaleY,
 	    //Z - After division by w, z will LINEARLY map from [0,projectionMaxDepth] --> [-1,1]
-	    positionEyeSpace.z * (positionEyeSpace.z - projectionMaxDepth * 0.5) / (projectionMaxDepth * 0.5),
+	    //positionEyeSpace.z * (positionEyeSpace.z - projectionMaxDepth * 0.5) / (projectionMaxDepth * 0.5),
+	    positionEyeSpace.z * positionEyeSpace.w,
     	positionEyeSpace.z
     );
 }
