@@ -2,7 +2,6 @@ package com.pheiffware.sphere3;
 
 import com.pheiffware.lib.AssetLoader;
 import com.pheiffware.lib.geometry.collada.ColladaMaterial;
-import com.pheiffware.lib.graphics.Color4F;
 import com.pheiffware.lib.graphics.GraphicsException;
 import com.pheiffware.lib.graphics.Matrix4;
 import com.pheiffware.lib.graphics.Mesh;
@@ -30,7 +29,11 @@ public class Sphere3ColladaLoader extends ColladaLoader
                                 Technique colorTechnique,
                                 Technique textureTechnique) throws GraphicsException
     {
-        super(objectManager, glCache, al, imageDirectory, true, new ColladaMaterial("Default", null, new Color4F(1f, 0.5f, 0.5f, 1f), new Color4F(1f, 0.5f, 0.5f, 1f), new Color4F(1f, 1f, 1f, 1f), 4f));
+        super(objectManager, glCache, al, imageDirectory);
+        setHomogenizePositions(true);
+
+        //TODO: Set to true
+        setHomogenizeNormals(false);
         this.colorTechnique = colorTechnique;
         this.textureTechnique = textureTechnique;
     }
