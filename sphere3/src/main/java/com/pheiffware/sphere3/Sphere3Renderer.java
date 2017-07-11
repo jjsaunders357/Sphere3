@@ -17,8 +17,8 @@ import com.pheiffware.lib.graphics.managed.engine.ObjectManager;
 import com.pheiffware.lib.graphics.managed.engine.renderers.SimpleRenderer;
 import com.pheiffware.lib.graphics.managed.light.Lighting;
 import com.pheiffware.lib.graphics.managed.program.RenderProperty;
+import com.pheiffware.lib.graphics.managed.program.Technique;
 import com.pheiffware.lib.graphics.managed.techniques.ColorMaterialTechnique;
-import com.pheiffware.lib.graphics.managed.techniques.TextureMaterialTechnique;
 import com.pheiffware.lib.utils.dom.XMLParseException;
 
 import java.io.IOException;
@@ -36,8 +36,8 @@ public class Sphere3Renderer extends GameRenderer
     private Sphere3ColladaLoader loader;
     private Lighting lighting;
     private SimpleRenderer simpleRenderer;
-    private ColorMaterialTechnique colorTechnique;
-    private TextureMaterialTechnique textureTechnique;
+    private Technique colorTechnique;
+    private Technique textureTechnique;
     private ObjectHandle cube;
 
     public Sphere3Renderer()
@@ -51,13 +51,15 @@ public class Sphere3Renderer extends GameRenderer
         camera = new Camera(90f, 1f, 0.1f, 100f, false);
         camera.setPosition(0f, 0f, 4f);
         colorTechnique = new ColorMaterialTechnique(al);
-        textureTechnique = new TextureMaterialTechnique(al);
+        //textureTechnique = new TextureMaterialTechnique(al);
+        textureTechnique = new SphereTextureMaterialTechnique(al);
+
         lighting = new Lighting(new float[]{0.2f, 0.2f, 0.2f, 1.0f}, new float[]{-3, 3, 0, 1}, new float[]{1.0f, 1.0f, 1.0f, 1.0f});
         simpleRenderer = new SimpleRenderer();
 
         objectManager = new ObjectManager();
         //TODO: Make techniques centralized so we don't have to pass arguments.
-        loader = new Sphere3ColladaLoader(objectManager, glCache, al, "images", colorTechnique, textureTechnique);
+        loader = new Sphere3ColladaLoader(objectManager, glCache, al, "images", colorTechnique, textureTechnique, 25.0f);
         try
         {
             Map<String, ObjectHandle> primitives = loader.loadCollada("meshes/primitives.dae");
@@ -77,7 +79,7 @@ public class Sphere3Renderer extends GameRenderer
     @Override
     public void onDrawFrame() throws GraphicsException
     {
-        GLES20.glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         GLES20.glClearDepthf(1);
         GLES20.glViewport(0, 0, getSurfaceWidth(), getSurfaceHeight());
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);

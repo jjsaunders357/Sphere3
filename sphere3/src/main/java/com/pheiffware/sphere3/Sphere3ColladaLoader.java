@@ -12,6 +12,7 @@ import com.pheiffware.lib.graphics.managed.program.RenderProperty;
 import com.pheiffware.lib.graphics.managed.program.RenderPropertyValue;
 import com.pheiffware.lib.graphics.managed.program.Technique;
 import com.pheiffware.lib.graphics.managed.texture.Texture2D;
+import com.pheiffware.sphere3.sphereMath.Spherizer;
 
 /**
  * Created by Steve on 7/8/2017.
@@ -21,21 +22,21 @@ public class Sphere3ColladaLoader extends ColladaLoader
 {
     private final Technique colorTechnique;
     private final Technique textureTechnique;
+    private final Spherizer spherizer;
 
     public Sphere3ColladaLoader(ObjectManager objectManager,
                                 GLCache glCache,
                                 AssetLoader al,
                                 String imageDirectory,
                                 Technique colorTechnique,
-                                Technique textureTechnique) throws GraphicsException
+                                Technique textureTechnique, float degreesPerLength) throws GraphicsException
     {
         super(objectManager, glCache, al, imageDirectory);
         setHomogenizePositions(true);
-
-        //TODO: Set to true
-        setHomogenizeNormals(false);
+        setHomogenizeNormals(true);
         this.colorTechnique = colorTechnique;
         this.textureTechnique = textureTechnique;
+        this.spherizer = new Spherizer(degreesPerLength);
     }
 
     @Override
@@ -66,7 +67,7 @@ public class Sphere3ColladaLoader extends ColladaLoader
                             new RenderPropertyValue(RenderProperty.SHININESS, material.shininess)
                     };
         }
-
+        //spherizer.spherizeMesh(mesh);
         objectManager.addStaticMesh(mesh, technique, renderProperties);
     }
 

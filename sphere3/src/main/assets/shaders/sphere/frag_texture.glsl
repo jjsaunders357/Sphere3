@@ -25,6 +25,9 @@ uniform float shininess;
 // How opaque the material.  Typically this, plus the specular highlighting will determine opaqueness.
 uniform float materialAlpha;
 
+//Texture color of object
+uniform sampler2D materialColorSampler;
+
 //Position of point being rendered in eye space
 in vec4 positionEyeSpace;
 in vec4 normalEyeSpace;

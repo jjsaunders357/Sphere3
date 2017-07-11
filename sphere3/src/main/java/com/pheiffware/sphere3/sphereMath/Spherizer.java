@@ -1,5 +1,7 @@
 package com.pheiffware.sphere3.sphereMath;
 
+import com.pheiffware.lib.graphics.Mesh;
+
 /**
  * Created by Steve on 7/8/2017.
  */
@@ -10,11 +12,11 @@ public class Spherizer
     private final Angle angle = Angle.newDegrees(0);
 
     //the ratio (degrees / EuclideanDistance) used in the transformation
-    private final float degreesPerDistance;
+    private final float degreesPerLength;
 
-    public Spherizer(float degreesPerDistance)
+    public Spherizer(float degreesPerLength)
     {
-        this.degreesPerDistance = degreesPerDistance;
+        this.degreesPerLength = degreesPerLength;
     }
 
 //    public Matrix4 spherizeMatrix(Matrix4 matrix)
@@ -34,16 +36,15 @@ public class Spherizer
 //    }
 
     /**
-     * Transforms the given Euclidean space positions and normals into sphere space.  Each incoming position and normal is assumed to be homogeneous with 4-elements (w is ignored).
+     * Transforms the given Euclidean space mesh sphere space.  Each incoming position and normal must be homogeneous with 4-elements (w is ignored).
      * The array is overwritten with 4 dimensional coordinates representing points on the sphere's face and normals in 4D.
      *
-     * @param positions homogeneous position vectors
-     * @param normals   homogeneous normal vectors
+     * @param mesh homogeneous position vectors
      */
-    public void spherizeVertices(float[] positions, float[] normals)
+    public void spherizeMesh(Mesh mesh)
     {
-        Vec4F position = new Vec4F(positions, 0);
-        Vec4F normal = new Vec4F(normals, 0);
+        Vec4F position = new Vec4F(mesh.getPositionData(), 0);
+        Vec4F normal = new Vec4F(mesh.getNormalData(), 0);
         do
         {
             spherizeVertex(position, normal);
@@ -61,7 +62,7 @@ public class Spherizer
         //W component is not used.
         position.setW(0);
         float magnitude = position.magnitude();
-        angle.setDegrees(degreesPerDistance * magnitude);
+        angle.setDegrees(degreesPerLength * magnitude);
 
         //Make position a unit vector
         position.scale(1f / magnitude);

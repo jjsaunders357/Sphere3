@@ -2,7 +2,7 @@
 precision highp float;
 
 //Transforms vertices to eye space
-uniform mat4 sphereViewModelMatrix;
+uniform mat4 viewModelMatrix;
 
 //Linear depth projection inputs
 uniform float projectionScaleX;
@@ -20,8 +20,8 @@ void main()
 {
 	texCoord = vertexTexCoord;
 	//Normal can be transformed with same matrix assuming its all rotations
-	normalEyeSpace = sphereViewModelMatrix * vertexNormal4;
-	positionEyeSpace = sphereViewModelMatrix * vertexPosition4;
+	normalEyeSpace = viewModelMatrix * vertexNormal4;
+	positionEyeSpace = viewModelMatrix * vertexPosition4;
 
     //TODO: Optimize
 	gl_Position = vec4(
