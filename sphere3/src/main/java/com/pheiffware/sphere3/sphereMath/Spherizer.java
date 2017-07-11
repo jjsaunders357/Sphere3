@@ -1,6 +1,7 @@
 package com.pheiffware.sphere3.sphereMath;
 
 import com.pheiffware.lib.graphics.Mesh;
+import com.pheiffware.lib.graphics.managed.program.VertexAttribute;
 
 /**
  * Created by Steve on 7/8/2017.
@@ -43,8 +44,8 @@ public class Spherizer
      */
     public void spherizeMesh(Mesh mesh)
     {
-        Vec4F position = new Vec4F(mesh.getPositionData(), 0);
-        Vec4F normal = new Vec4F(mesh.getNormalData(), 0);
+        Vec4F position = new Vec4F(mesh.getAttributeData(VertexAttribute.POSITION4), 0);
+        Vec4F normal = new Vec4F(mesh.getAttributeData(VertexAttribute.NORMAL4), 0);
         do
         {
             spherizeVertex(position, normal);

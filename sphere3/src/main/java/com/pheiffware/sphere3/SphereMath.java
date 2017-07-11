@@ -8,7 +8,7 @@ import com.pheiffware.lib.graphics.Matrix4;
 
 public class SphereMath
 {
-    public static Matrix4 forward(float angleInDegrees)
+    public static Matrix4 cameraForward(float angleInDegrees)
     {
         double angleInRadians = Math.toRadians(angleInDegrees);
         float cosAngle = (float) Math.cos(angleInRadians);
@@ -17,8 +17,8 @@ public class SphereMath
                 {
                         1, 0, 0, 0,
                         0, 1, 0, 0,
-                        0, 0, cosAngle, sinAngle,
-                        0, 0, -sinAngle, cosAngle
+                        0, 0, cosAngle, -sinAngle,
+                        0, 0, sinAngle, cosAngle
                 };
         return new Matrix4(m);
     }

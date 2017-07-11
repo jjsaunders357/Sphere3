@@ -67,7 +67,7 @@ public class Sphere3ColladaLoader extends ColladaLoader
                             new RenderPropertyValue(RenderProperty.SHININESS, material.shininess)
                     };
         }
-        //spherizer.spherizeMesh(mesh);
+        spherizer.spherizeMesh(mesh);
         objectManager.addStaticMesh(mesh, technique, renderProperties);
     }
 

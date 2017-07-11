@@ -129,17 +129,17 @@ public class Vec4F
 
     public final float y()
     {
-        return data[offsetX];
+        return data[offsetY];
     }
 
     public final float z()
     {
-        return data[offsetX];
+        return data[offsetZ];
     }
 
     public final float w()
     {
-        return data[offsetX];
+        return data[offsetW];
     }
 
 }

@@ -8,7 +8,6 @@ import com.pheiffware.lib.and.gui.graphics.openGL.GameRenderer;
 import com.pheiffware.lib.and.gui.graphics.openGL.SystemInfo;
 import com.pheiffware.lib.and.input.TouchAnalyzer;
 import com.pheiffware.lib.geometry.Transform2D;
-import com.pheiffware.lib.graphics.Camera;
 import com.pheiffware.lib.graphics.GraphicsException;
 import com.pheiffware.lib.graphics.Matrix4;
 import com.pheiffware.lib.graphics.managed.GLCache;
@@ -20,6 +19,7 @@ import com.pheiffware.lib.graphics.managed.program.RenderProperty;
 import com.pheiffware.lib.graphics.managed.program.Technique;
 import com.pheiffware.lib.graphics.managed.techniques.ColorMaterialTechnique;
 import com.pheiffware.lib.utils.dom.XMLParseException;
+import com.pheiffware.sphere3.sphereMath.SphereCamera;
 
 import java.io.IOException;
 import java.util.Map;
@@ -31,7 +31,7 @@ import java.util.Map;
 public class Sphere3Renderer extends GameRenderer
 {
     private static final double screenDragToCameraTranslation = 0.01f;
-    private Camera camera;
+    private SphereCamera camera;
     private ObjectManager objectManager;
     private Sphere3ColladaLoader loader;
     private Lighting lighting;
@@ -48,8 +48,8 @@ public class Sphere3Renderer extends GameRenderer
     @Override
     protected void onSurfaceCreated(AssetLoader al, GLCache glCache, SystemInfo systemInfo) throws GraphicsException
     {
-        camera = new Camera(90f, 1f, 0.1f, 100f, false);
-        camera.setPosition(0f, 0f, 4f);
+        camera = new SphereCamera(90f, 1f, 1.01f, false);
+        camera.moveForward(-40.f);
         colorTechnique = new ColorMaterialTechnique(al);
         //textureTechnique = new TextureMaterialTechnique(al);
         textureTechnique = new SphereTextureMaterialTechnique(al);
@@ -113,20 +113,17 @@ public class Sphere3Renderer extends GameRenderer
         Transform2D transform = event.transform;
         if (numPointers > 2)
         {
-            //Geometric average of x and y scale factors
-            float scaleFactor = (float) Math.sqrt(transform.scale.x * transform.scale.y);
-            camera.zoom(scaleFactor);
+//            //Geometric average of x and y scale factors
+//            float scaleFactor = (float) Math.sqrt(transform.scale.x * transform.scale.y);
+//            camera.zoom(scaleFactor);
+//            camera.roll((float) (180 * transform.rotation / Math.PI));
         }
         else if (numPointers > 1)
         {
-            camera.roll((float) (180 * transform.rotation / Math.PI));
-            camera.rotateScreenInputVector((float) transform.translation.x, (float) -transform.translation.y);
         }
         else
         {
-            float cameraX = (float) (transform.translation.x * screenDragToCameraTranslation);
-            float cameraZ = (float) (transform.translation.y * screenDragToCameraTranslation);
-            camera.translateScreen(cameraX, 0, cameraZ);
+            camera.moveInputVector((float) transform.translation.x, (float) -transform.translation.y, 1f);
         }
     }
 
