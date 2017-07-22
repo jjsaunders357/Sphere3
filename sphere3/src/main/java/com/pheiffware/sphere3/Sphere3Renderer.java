@@ -22,6 +22,8 @@ import com.pheiffware.lib.utils.dom.XMLParseException;
 import com.pheiffware.sphere3.sphereMath.SphereCamera;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,6 +41,7 @@ public class Sphere3Renderer extends GameRenderer
     private Technique colorTechnique;
     private Technique textureTechnique;
     private ObjectHandle cube;
+    private List<ObjectHandle> objects;
 
     public Sphere3Renderer()
     {
@@ -48,7 +51,8 @@ public class Sphere3Renderer extends GameRenderer
     @Override
     protected void onSurfaceCreated(AssetLoader al, GLCache glCache, SystemInfo systemInfo) throws GraphicsException
     {
-        camera = new SphereCamera(90f, 1f, 1.01f, false);
+        objects = new ArrayList<>();
+        camera = new SphereCamera(90f, 1f, false);
         camera.moveForward(-20.f);
         colorTechnique = new ColorMaterialTechnique(al);
         textureTechnique = new SphereTextureMaterialTechnique(al);
@@ -58,20 +62,33 @@ public class Sphere3Renderer extends GameRenderer
 
         objectManager = new ObjectManager();
         //TODO: Make techniques centralized so we don't have to pass arguments.
-        loader = new Sphere3ColladaLoader(objectManager, glCache, al, "images", colorTechnique, textureTechnique, 25.0f);
+
+        //TODO: What is the correct length/angle conversion here?
+        loader = new Sphere3ColladaLoader(objectManager, glCache, al, "images", colorTechnique, textureTechnique, (float) (2.05 * 36.0 / (Math.sqrt(3))));
         try
         {
             Map<String, ObjectHandle> primitives = loader.loadCollada("meshes/primitives.dae");
             cube = primitives.get("Cube");
             cube.setProperty(RenderProperty.MODEL_MATRIX, Matrix4.newIdentity());
             objectManager.packAndTransfer();
+
+            objects.add(cube);
+            Matrix4 cubeTransform = Matrix4.newIdentity();
+            for (int i = 1; i < 10; i++)
+            {
+                cubeTransform = Matrix4.multiply(cubeTransform, SphereMath.zwRotation(36));
+                ObjectHandle object = cube.copy();
+                object.setProperty(RenderProperty.MODEL_MATRIX, cubeTransform);
+                objects.add(object);
+            }
         }
         catch (XMLParseException | IOException e)
         {
             throw new RuntimeException("Failure", e);
         }
         GLES20.glEnable(GLES20.GL_DEPTH_TEST);
-        //Must use front given we look down the +z-axis in the neutral position (opposite of OpenGL standard).
+
+        //Must use front face given we look down the +z-axis in the neutral position (opposite of OpenGL standard).
         GLES20.glCullFace(GLES20.GL_FRONT);
         GLES20.glEnable(GLES20.GL_CULL_FACE);
     }
@@ -84,17 +101,17 @@ public class Sphere3Renderer extends GameRenderer
         GLES20.glViewport(0, 0, getSurfaceWidth(), getSurfaceHeight());
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
-        colorTechnique.setProperty(RenderProperty.PROJECTION_LINEAR_DEPTH, camera.getProjectionLinearDepth());
+        colorTechnique.setProperty(RenderProperty.PROJECTION_LINEAR_DEPTH, camera.getProjection());
         colorTechnique.setProperty(RenderProperty.VIEW_MATRIX, camera.getViewMatrix());
         colorTechnique.setProperty(RenderProperty.LIGHTING, lighting);
         colorTechnique.applyConstantProperties();
 
-        textureTechnique.setProperty(RenderProperty.PROJECTION_LINEAR_DEPTH, camera.getProjectionLinearDepth());
+        textureTechnique.setProperty(RenderProperty.PROJECTION_LINEAR_DEPTH, camera.getProjection());
         textureTechnique.setProperty(RenderProperty.VIEW_MATRIX, camera.getViewMatrix());
         textureTechnique.setProperty(RenderProperty.LIGHTING, lighting);
         textureTechnique.applyConstantProperties();
 
-        simpleRenderer.add(cube);
+        simpleRenderer.add(objects);
         simpleRenderer.render();
         GLES20.glFinish();
     }
@@ -116,14 +133,18 @@ public class Sphere3Renderer extends GameRenderer
 //            //Geometric average of x and y scale factors
 //            float scaleFactor = (float) Math.sqrt(transform.scale.x * transform.scale.y);
 //            camera.zoom(scaleFactor);
-//            camera.roll((float) (180 * transform.rotation / Math.PI));
+
+            camera.moveScreenInputVector((float) transform.translation.x, (float) -transform.translation.y, 0.3f);
+            camera.roll((float) (180 * transform.rotation / Math.PI));
         }
         else if (numPointers > 1)
         {
+            camera.roll((float) (180 * transform.rotation / Math.PI));
+            camera.rotateScreenInputVector((float) transform.translation.x, (float) -transform.translation.y);
         }
         else
         {
-            camera.moveInputVector((float) transform.translation.x, (float) -transform.translation.y, 1f);
+            camera.forwardStrafeInputVector((float) transform.translation.x, (float) -transform.translation.y, 0.3f);
         }
     }
 

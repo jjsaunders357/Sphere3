@@ -1,7 +1,9 @@
 package com.pheiffware.sphere3.sphereMath;
 
+import com.pheiffware.lib.geometry.Vec3D;
 import com.pheiffware.lib.graphics.Matrix4;
 import com.pheiffware.lib.graphics.managed.techniques.ProjectionLinearDepth;
+import com.pheiffware.sphere3.SphereMath;
 
 /**
  * Created by Steve on 7/11/2017.
@@ -14,7 +16,6 @@ public class SphereCamera
 
     private float FOV;
     private float aspect;
-    private float maxDepth;
     private boolean flipVertical;
 
     //The linear depth projection representing the lens
@@ -23,15 +24,14 @@ public class SphereCamera
     //Represent the composition of invOrientation * inverseTranslation
     private Matrix4 cameraMatrix;
 
-    public SphereCamera(float FOV, float aspect, float maxDepth, boolean flipVertical)
+    public SphereCamera(float FOV, float aspect, boolean flipVertical)
     {
         //Standing at [0,0,0,-1].  Looking in +z direction, with +y axis straight up and +x axis left
         cameraMatrix = Matrix4.newIdentity();
         this.FOV = FOV;
         this.aspect = aspect;
-        this.maxDepth = maxDepth;
         this.flipVertical = flipVertical;
-        setLens(FOV, aspect, maxDepth, flipVertical);
+        setLens(FOV, aspect, flipVertical);
     }
 
     /**
@@ -46,7 +46,7 @@ public class SphereCamera
 
     private void updateProjection()
     {
-        projectionLinearDepth = new ProjectionLinearDepth(FOV, aspect, maxDepth);
+        projectionLinearDepth = new ProjectionLinearDepth(FOV, aspect, 0);
     }
 
     /**
@@ -61,7 +61,7 @@ public class SphereCamera
      * @param y                forward movement
      * @param degreesPerLength conversion factor between x,y length and angle to rotate
      */
-    public void moveInputVector(float x, float y, float degreesPerLength)
+    public void forwardStrafeInputVector(float x, float y, float degreesPerLength)
     {
         float mag = (float) Math.sqrt(x * x + y * y);
         if (mag != 0)
@@ -87,54 +87,105 @@ public class SphereCamera
      * @param x sideways movement (assumed to be in units of dp)
      * @param y forward movement (assumed to be in units of dp)
      */
-    public void moveScreenInputVector(float x, float y)
+    public void forwardStrafeInputVector(float x, float y)
     {
-        moveInputVector(x, y, SCREEN_DP_TO_DEGREES);
+        forwardStrafeInputVector(x, y, SCREEN_DP_TO_DEGREES);
     }
 
+    /**
+     * Move the camera in the direction it is facing by the given number of degrees.
+     *
+     * @param degrees
+     */
     public void moveForward(float degrees)
     {
-        double radians = Math.toRadians(degrees);
-        float cosAngle = (float) Math.cos(radians);
-        float sinAngle = (float) Math.sin(radians);
-        float[] m = new float[]
-                {
-                        1, 0, 0, 0,
-                        0, 1, 0, 0,
-                        0, 0, cosAngle, -sinAngle,
-                        0, 0, sinAngle, cosAngle
-                };
-        cameraMatrix.multiplyByLHS(new Matrix4(m));
+        cameraMatrix.multiplyByLHS(SphereMath.zwRotation(-degrees));
     }
 
-    public void moveRight(float angleInDegrees)
+    public void moveScreenInputVector(float x, float y, float degreesPerLength)
     {
-        double angleInRadians = Math.toRadians(angleInDegrees);
-        float cosAngle = (float) Math.cos(angleInRadians);
-        float sinAngle = (float) Math.sin(angleInRadians);
-        float[] m = new float[]
-                {
-                        cosAngle, 0, 0, -sinAngle,
-                        0, 1, 0, 0,
-                        0, 0, 1, 0,
-                        sinAngle, 0, 0, cosAngle
-                };
-        cameraMatrix.multiplyByLHS(new Matrix4(m));
+        float mag = (float) Math.sqrt(x * x + y * y);
+        if (mag != 0)
+        {
+            float moveDegrees = degreesPerLength * mag;
+            float xyAngle = (float) Math.toDegrees(Math.atan2(y, x));
+            Matrix4 xyRot = Matrix4.newRotate(xyAngle, 0, 0, 1);
+            Matrix4 invXYRot = Matrix4.newRotate(-xyAngle, 0, 0, 1);
+            cameraMatrix.multiplyByLHS(xyRot);
+            cameraMatrix.multiplyByLHS(SphereMath.xwRotation(-moveDegrees));
+            cameraMatrix.multiplyByLHS(invXYRot);
+        }
     }
+
+    /**
+     * Used to turn screen input (such as a mouse or touch/drag) into a camera rotation. Given the direction the camera is looking and an x,y vector, in screen space, rotate in the
+     * plane described by the vectors (x,y,0) and (0,0,z). Rotate by an amount proportional to length.
+     * <p/>
+     * If x,y magnitude is 0, then nothing happens.
+     *
+     * @param x                       x screen movement
+     * @param y                       y screen movement
+     * @param cameraRotationPerLength the vector's length is scaled by this factor to convert it to degrees
+     */
+    public void rotateScreenInputVector(float x, float y, float cameraRotationPerLength)
+    {
+        float mag = (float) Math.sqrt(x * x + y * y);
+        if (mag != 0)
+        {
+            Vec3D inScreenVec = new Vec3D(x, y, 0);
+            Vec3D perpScreenVec = new Vec3D(0, 0, -1);
+            Vec3D rotationAxis = Vec3D.cross(perpScreenVec, inScreenVec);
+            float angleDegrees = cameraRotationPerLength * mag;
+            rotateScreen(angleDegrees, rotationAxis);
+        }
+    }
+
+    public void rotateScreenInputVector(float x, float y)
+    {
+        rotateScreenInputVector(x, y, SCREEN_DP_TO_DEGREES);
+    }
+
+    /**
+     * Rotate the camera relative to "screen" coordinate system. x and y are in the screen and z is perpendicular to the screen.
+     *
+     * @param angleDegrees
+     * @param rotationAxis
+     */
+    public final void rotateScreen(float angleDegrees, Vec3D rotationAxis)
+    {
+        rotateScreen(angleDegrees, (float) rotationAxis.x, (float) rotationAxis.y, (float) rotationAxis.z);
+    }
+
+    /**
+     * Rotate the camera around the given "screen" axis by the specified amount. x and y are in the screen and z is perpendicular to the screen.
+     *
+     * @param angleDegrees
+     * @param x            left/right (+/-)
+     * @param y            up/down (+/-)
+     * @param z
+     */
+    public void rotateScreen(float angleDegrees, float x, float y, float z)
+    {
+        cameraMatrix.multiplyByLHS(Matrix4.newRotate(-angleDegrees, x, y, z));
+    }
+
+    public void roll(float angleDegrees)
+    {
+        rotateScreen(angleDegrees, 0, 0, 1);
+    }
+
 
     /**
      * Change the lens characteristics of the camera such as FOV
      *
      * @param FOV          field of view
      * @param aspect       width/height ratio
-     * @param maxDepth     maximum visible depth.  Depth defined by atan2(z,-w)
      * @param flipVertical should the projection be flipped?  Useful for rending to textures.
      */
-    private void setLens(float FOV, float aspect, float maxDepth, boolean flipVertical)
+    private void setLens(float FOV, float aspect, boolean flipVertical)
     {
         this.FOV = FOV;
         this.aspect = aspect;
-        this.maxDepth = maxDepth;
         this.flipVertical = flipVertical;
         updateProjection();
     }
@@ -151,7 +202,7 @@ public class SphereCamera
         updateProjection();
     }
 
-    public ProjectionLinearDepth getProjectionLinearDepth()
+    public ProjectionLinearDepth getProjection()
     {
         return projectionLinearDepth;
     }
@@ -160,5 +211,6 @@ public class SphereCamera
     {
         return cameraMatrix;
     }
+
 
 }

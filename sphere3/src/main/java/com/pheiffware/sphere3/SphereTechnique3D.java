@@ -34,12 +34,11 @@ public abstract class SphereTechnique3D extends ProgramTechnique
         setUniformValue(UniformName.VIEW_MODEL_MATRIX, viewModelMatrix.m);
     }
 
-    protected void setProjectionLinearDepth()
+    protected void setProjection()
     {
-        ProjectionLinearDepth projectionLinearDepth = (ProjectionLinearDepth) getPropertyValue(RenderProperty.PROJECTION_LINEAR_DEPTH);
-        setUniformValue(UniformName.PROJECTION_SCALE_X, projectionLinearDepth.scaleX);
-        setUniformValue(UniformName.PROJECTION_SCALE_Y, projectionLinearDepth.scaleY);
-        setUniformValue(UniformName.PROJECTION_MAX_DEPTH, projectionLinearDepth.maxDepth);
+        ProjectionLinearDepth projection = (ProjectionLinearDepth) getPropertyValue(RenderProperty.PROJECTION_LINEAR_DEPTH);
+        setUniformValue(UniformName.PROJECTION_SCALE_X, projection.scaleX);
+        setUniformValue(UniformName.PROJECTION_SCALE_Y, projection.scaleY);
     }
 
 

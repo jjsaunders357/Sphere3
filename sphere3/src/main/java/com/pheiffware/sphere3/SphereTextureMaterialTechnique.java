@@ -27,7 +27,7 @@ public class SphereTextureMaterialTechnique extends SphereTechnique3D
 
     public void applyConstantPropertiesImplement()
     {
-        setProjectionLinearDepth();
+        setProjection();
         //setLightingConstants();
     }
 

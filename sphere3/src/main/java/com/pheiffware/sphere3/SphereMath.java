@@ -8,7 +8,13 @@ import com.pheiffware.lib.graphics.Matrix4;
 
 public class SphereMath
 {
-    public static Matrix4 cameraForward(float angleInDegrees)
+    /**
+     * Creates a rotation matrix which rotates in the zw-plane.  Rotation is from -w towards +z.
+     *
+     * @param angleInDegrees
+     * @return
+     */
+    public static Matrix4 zwRotation(float angleInDegrees)
     {
         double angleInRadians = Math.toRadians(angleInDegrees);
         float cosAngle = (float) Math.cos(angleInRadians);
@@ -17,13 +23,13 @@ public class SphereMath
                 {
                         1, 0, 0, 0,
                         0, 1, 0, 0,
-                        0, 0, cosAngle, -sinAngle,
-                        0, 0, sinAngle, cosAngle
+                        0, 0, cosAngle, sinAngle,
+                        0, 0, -sinAngle, cosAngle
                 };
         return new Matrix4(m);
     }
 
-    public static Matrix4 right(float angleInDegrees)
+    public static Matrix4 xwRotation(float angleInDegrees)
     {
         double angleInRadians = Math.toRadians(angleInDegrees);
         float cosAngle = (float) Math.cos(angleInRadians);
