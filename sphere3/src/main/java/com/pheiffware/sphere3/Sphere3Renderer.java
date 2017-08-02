@@ -52,7 +52,8 @@ public class Sphere3Renderer extends GameRenderer
     protected void onSurfaceCreated(AssetLoader al, GLCache glCache, SystemInfo systemInfo) throws GraphicsException
     {
         objects = new ArrayList<>();
-        camera = new SphereCamera(90f, 1f, false);
+        camera = new SphereCamera();
+        camera.setLens(90f, 1f, 0.01f, 1.001f, false);
         camera.moveForward(-20.f);
         colorTechnique = new ColorMaterialTechnique(al);
         textureTechnique = new SphereTextureMaterialTechnique(al);
@@ -101,12 +102,12 @@ public class Sphere3Renderer extends GameRenderer
         GLES20.glViewport(0, 0, getSurfaceWidth(), getSurfaceHeight());
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
-        colorTechnique.setProperty(RenderProperty.PROJECTION_LINEAR_DEPTH, camera.getProjection());
+        colorTechnique.setProperty(RenderProperty.PROJECTION_LINEAR_DEPTH, camera.getProjectionLinearDepth());
         colorTechnique.setProperty(RenderProperty.VIEW_MATRIX, camera.getViewMatrix());
         colorTechnique.setProperty(RenderProperty.LIGHTING, lighting);
         colorTechnique.applyConstantProperties();
 
-        textureTechnique.setProperty(RenderProperty.PROJECTION_LINEAR_DEPTH, camera.getProjection());
+        textureTechnique.setProperty(RenderProperty.PROJECTION_LINEAR_DEPTH, camera.getProjectionLinearDepth());
         textureTechnique.setProperty(RenderProperty.VIEW_MATRIX, camera.getViewMatrix());
         textureTechnique.setProperty(RenderProperty.LIGHTING, lighting);
         textureTechnique.applyConstantProperties();
@@ -120,6 +121,7 @@ public class Sphere3Renderer extends GameRenderer
     public void onSurfaceResize(int width, int height)
     {
         super.onSurfaceResize(width, height);
+
         camera.setAspect(width / (float) height);
     }
 
@@ -134,17 +136,17 @@ public class Sphere3Renderer extends GameRenderer
 //            float scaleFactor = (float) Math.sqrt(transform.scale.x * transform.scale.y);
 //            camera.zoom(scaleFactor);
 
-            camera.moveScreenInputVector((float) transform.translation.x, (float) -transform.translation.y, 0.3f);
+            camera.upStrafeInput((float) transform.translation.x, (float) -transform.translation.y, 0.3f);
             camera.roll((float) (180 * transform.rotation / Math.PI));
         }
         else if (numPointers > 1)
         {
             camera.roll((float) (180 * transform.rotation / Math.PI));
-            camera.rotateScreenInputVector((float) transform.translation.x, (float) -transform.translation.y);
+            camera.rotateInput((float) transform.translation.x, (float) -transform.translation.y, 1.0f);
         }
         else
         {
-            camera.forwardStrafeInputVector((float) transform.translation.x, (float) -transform.translation.y, 0.3f);
+            camera.forwardStrafeInput((float) transform.translation.x, (float) -transform.translation.y, 0.3f);
         }
     }
 

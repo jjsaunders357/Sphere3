@@ -1,5 +1,7 @@
 package com.pheiffware.sphere3.sphereMath;
 
+import com.pheiffware.lib.geometry.Angle;
+
 /**
  * Created by Steve on 7/8/2017.
  */
