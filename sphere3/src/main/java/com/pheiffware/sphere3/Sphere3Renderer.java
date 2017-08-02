@@ -90,7 +90,7 @@ public class Sphere3Renderer extends GameRenderer
         GLES20.glEnable(GLES20.GL_DEPTH_TEST);
 
         //Must use front face given we look down the +z-axis in the neutral position (opposite of OpenGL standard).
-        GLES20.glCullFace(GLES20.GL_FRONT);
+        GLES20.glCullFace(GLES20.GL_BACK);
         GLES20.glEnable(GLES20.GL_CULL_FACE);
     }
 

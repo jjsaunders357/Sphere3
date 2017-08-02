@@ -41,6 +41,6 @@ void main()
     vec4 sampledColor = texture(materialColorSampler,texCoord);
     //Color of fragment is the combination of all colors
 	fragColor = sampledColor;
-	//gl_FragDepth = (positionEyeSpace.w+1.0)*0.5;
+	gl_FragDepth = (positionEyeSpace.w+1.0)*0.5;
 }
 

@@ -31,7 +31,7 @@ public class SphereCamera extends Camera
     @Override
     public void forwardStrafeInput(float xInput, float yInput, float degreesPerLength)
     {
-        rotateInput(xInput, yInput, Axis.X, Axis.Z, Axis.W, degreesPerLength);
+        rotateInput(xInput, yInput, Axis.X, Axis.negZ, Axis.W, degreesPerLength);
     }
 
     /**
