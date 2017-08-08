@@ -45,7 +45,7 @@ public class Sphere3Renderer extends GameRenderer
 
     public Sphere3Renderer()
     {
-        super(AndGraphicsUtils.GL_VERSION_30, AndGraphicsUtils.GL_VERSION_30);
+        super(AndGraphicsUtils.GL_VERSION_30, AndGraphicsUtils.GL_VERSION_30, "shaders");
     }
 
     @Override
