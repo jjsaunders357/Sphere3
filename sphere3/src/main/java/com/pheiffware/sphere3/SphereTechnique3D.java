@@ -1,13 +1,17 @@
 package com.pheiffware.sphere3;
 
-import com.pheiffware.lib.AssetLoader;
+import com.pheiffware.lib.ParseException;
 import com.pheiffware.lib.graphics.GraphicsException;
 import com.pheiffware.lib.graphics.Matrix4;
+import com.pheiffware.lib.graphics.managed.GLCache;
 import com.pheiffware.lib.graphics.managed.light.Lighting;
 import com.pheiffware.lib.graphics.managed.program.ProgramTechnique;
 import com.pheiffware.lib.graphics.managed.program.RenderProperty;
 import com.pheiffware.lib.graphics.managed.program.UniformName;
 import com.pheiffware.lib.graphics.managed.techniques.ProjectionLinearDepth;
+
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * Created by Steve on 7/4/2017.
@@ -20,9 +24,9 @@ public abstract class SphereTechnique3D extends ProgramTechnique
     private final float[] matColor = new float[4];
 
 
-    public SphereTechnique3D(AssetLoader al, String vertexShaderAsset, String fragmentShaderAsset, RenderProperty[] properties) throws GraphicsException
+    public SphereTechnique3D(GLCache glCache, Map<String, Object> versionConfig, RenderProperty[] properties, String vertexShaderAsset, String fragmentShaderAsset) throws GraphicsException, IOException, ParseException
     {
-        super(al, vertexShaderAsset, fragmentShaderAsset, properties);
+        super(glCache, versionConfig, properties, vertexShaderAsset, fragmentShaderAsset);
     }
 
     protected final void setViewModel()
