@@ -3,7 +3,6 @@ package com.pheiffware.sphere3;
 import android.opengl.GLES20;
 
 import com.pheiffware.lib.AssetLoader;
-import com.pheiffware.lib.ParseException;
 import com.pheiffware.lib.and.graphics.AndGraphicsUtils;
 import com.pheiffware.lib.and.gui.graphics.openGL.GameRenderer;
 import com.pheiffware.lib.and.gui.graphics.openGL.SystemInfo;
@@ -50,7 +49,7 @@ public class Sphere3Renderer extends GameRenderer
     }
 
     @Override
-    protected void onSurfaceCreated(AssetLoader al, GLCache glCache, SystemInfo systemInfo) throws GraphicsException, IOException, ParseException
+    protected void onSurfaceCreated(AssetLoader al, GLCache glCache, SystemInfo systemInfo) throws GraphicsException
     {
         objects = new ArrayList<>();
         camera = new SphereCamera();
