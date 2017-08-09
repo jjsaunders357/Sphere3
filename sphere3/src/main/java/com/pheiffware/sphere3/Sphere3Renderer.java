@@ -56,8 +56,8 @@ public class Sphere3Renderer extends GameRenderer
         camera = new SphereCamera();
         camera.setLens(90f, 1f, 0.01f, 1.001f, false);
         camera.moveForward(-20.f);
-        colorTechnique = new ColorMaterialTechnique(glCache);
-        textureTechnique = new SphereTextureMaterialTechnique(glCache);
+        colorTechnique = glCache.buildTechnique(ColorMaterialTechnique.class);
+        textureTechnique = glCache.buildTechnique(SphereTextureMaterialTechnique.class);
 
         lighting = new Lighting(new float[]{0.2f, 0.2f, 0.2f, 1.0f}, new float[]{-3, 3, 0, 1}, new float[]{1.0f, 1.0f, 1.0f, 1.0f});
         simpleRenderer = new SimpleRenderer();
