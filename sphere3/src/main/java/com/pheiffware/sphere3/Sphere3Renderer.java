@@ -15,9 +15,10 @@ import com.pheiffware.lib.graphics.managed.engine.ObjectHandle;
 import com.pheiffware.lib.graphics.managed.engine.ObjectManager;
 import com.pheiffware.lib.graphics.managed.engine.renderers.SimpleRenderer;
 import com.pheiffware.lib.graphics.managed.light.Lighting;
+import com.pheiffware.lib.graphics.managed.program.GraphicsConfig;
 import com.pheiffware.lib.graphics.managed.program.RenderProperty;
 import com.pheiffware.lib.graphics.managed.program.Technique;
-import com.pheiffware.lib.graphics.managed.techniques.ColorMaterialTechnique;
+import com.pheiffware.lib.graphics.managed.techniques.Std3DTechnique;
 import com.pheiffware.lib.utils.dom.XMLParseException;
 import com.pheiffware.sphere3.sphereMath.SphereCamera;
 
@@ -55,7 +56,12 @@ public class Sphere3Renderer extends GameRenderer
         camera = new SphereCamera();
         camera.setLens(90f, 1f, 0.01f, 1.001f, false);
         camera.moveForward(-20.f);
-        colorTechnique = glCache.buildTechnique(ColorMaterialTechnique.class);
+
+
+        glCache.setConfigProperty(GraphicsConfig.ENABLE_SHADOWS, false);
+
+        //BS Fill-in technique
+        colorTechnique = glCache.buildTechnique(Std3DTechnique.class, GraphicsConfig.TEXTURED_MATERIAL, false);
         textureTechnique = glCache.buildTechnique(SphereTextureMaterialTechnique.class);
 
         lighting = new Lighting(new float[]{0.2f, 0.2f, 0.2f, 1.0f}, new float[]{-3, 3, 0, 1}, new float[]{1.0f, 1.0f, 1.0f, 1.0f});

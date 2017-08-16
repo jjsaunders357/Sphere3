@@ -22,9 +22,9 @@ public abstract class SphereTechnique3D extends ProgramTechnique
     private final float[] matColor = new float[4];
 
 
-    public SphereTechnique3D(ShaderBuilder shaderBuilder, Map<String, Object> localConfig, RenderProperty[] properties, String vertexShaderAsset, String fragmentShaderAsset) throws GraphicsException
+    public SphereTechnique3D(ShaderBuilder shaderBuilder, Map<String, Object> localConfig, String vertexShaderAsset, String fragmentShaderAsset) throws GraphicsException
     {
-        super(shaderBuilder, localConfig, properties, vertexShaderAsset, fragmentShaderAsset);
+        super(shaderBuilder, localConfig, vertexShaderAsset, fragmentShaderAsset);
     }
 
     protected final void setViewModel()

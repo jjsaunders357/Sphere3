@@ -16,15 +16,7 @@ public class SphereTextureMaterialTechnique extends SphereTechnique3D
 {
     public SphereTextureMaterialTechnique(ShaderBuilder shaderBuilder, Map<String, Object> localConfig) throws GraphicsException
     {
-        super(shaderBuilder, localConfig, new RenderProperty[]{
-                RenderProperty.PROJECTION_LINEAR_DEPTH,
-                RenderProperty.VIEW_MATRIX,
-                RenderProperty.MODEL_MATRIX,
-                RenderProperty.LIGHTING,
-                RenderProperty.MAT_COLOR_TEXTURE,
-                RenderProperty.SPEC_MAT_COLOR,
-                RenderProperty.SHININESS
-        }, "sphere/vert_texture.glsl", "sphere/frag_texture.glsl");
+        super(shaderBuilder, localConfig, "sphere/vert_texture.glsl", "sphere/frag_texture.glsl");
     }
 
     public void applyConstantPropertiesImplement()
@@ -38,7 +30,7 @@ public class SphereTextureMaterialTechnique extends SphereTechnique3D
     {
         setViewModel();
         Texture texture = (Texture) getPropertyValue(RenderProperty.MAT_COLOR_TEXTURE);
-        setUniformValue(UniformName.MATERIAL_SAMPLER, texture.autoBind());
+        setUniformValue(UniformName.DIFFUSE_MATERIAL_SAMPLER, texture.autoBind());
 
 //        setSpecLightingColor();
 //
