@@ -68,9 +68,8 @@ public class Sphere3Renderer extends GameRenderer
         simpleRenderer = new SimpleRenderer();
 
         objectManager = new ObjectManager();
-        //TODO: Make techniques centralized so we don't have to pass arguments.
 
-        //TODO: What is the correct length/angle conversion here?
+        //TODO 1.0 = 2/2: What is the correct length/angle conversion here?
         loader = new Sphere3ColladaLoader(objectManager, glCache, al, "images", colorTechnique, textureTechnique, (float) (2.05 * 36.0 / (Math.sqrt(3))));
         try
         {
