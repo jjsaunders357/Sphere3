@@ -2,6 +2,7 @@ package com.pheiffware.sphere3.sphereMath;
 
 import com.pheiffware.lib.geometry.Angle;
 import com.pheiffware.lib.graphics.Mesh;
+import com.pheiffware.lib.graphics.Vec4F;
 import com.pheiffware.lib.graphics.managed.program.VertexAttribute;
 
 /**
