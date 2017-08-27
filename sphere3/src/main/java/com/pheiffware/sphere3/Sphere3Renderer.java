@@ -59,8 +59,6 @@ public class Sphere3Renderer extends GameRenderer
         camera.moveForward(-20.f);
 
 
-        glCache.setConfigProperty(GraphicsConfig.ENABLE_SHADOWS, false);
-
         //BS Fill-in technique
         colorTechnique = glCache.buildTechnique(Std3DTechnique.class, GraphicsConfig.TEXTURED_MATERIAL, false);
         textureTechnique = glCache.buildTechnique(SphereTextureMaterialTechnique.class);
@@ -111,6 +109,7 @@ public class Sphere3Renderer extends GameRenderer
         colorTechnique.setProperty(RenderProperty.PROJECTION_LINEAR_DEPTH, projection.getLinearDepth());
         colorTechnique.setProperty(RenderProperty.VIEW_MATRIX, camera.getViewMatrix());
         colorTechnique.setProperty(RenderProperty.LIGHTING, lighting);
+        colorTechnique.setProperty(RenderProperty.SHADOW_PROJECTION_MAX_DEPTH, 1.0f);
         colorTechnique.applyConstantProperties();
 
         textureTechnique.setProperty(RenderProperty.PROJECTION_LINEAR_DEPTH, projection.getLinearDepth());
