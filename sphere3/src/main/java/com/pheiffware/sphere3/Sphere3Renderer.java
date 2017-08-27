@@ -106,12 +106,11 @@ public class Sphere3Renderer extends GameRenderer
         GLES20.glViewport(0, 0, getSurfaceWidth(), getSurfaceHeight());
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
-        colorTechnique.setProperty(RenderProperty.PROJECTION_LINEAR_DEPTH, projection.getLinearDepth());
+        colorTechnique.setProperty(RenderProperty.PROJECTION_MATRIX, projection.getProjectionMatrix());
         colorTechnique.setProperty(RenderProperty.VIEW_MATRIX, camera.getViewMatrix());
         colorTechnique.setProperty(RenderProperty.LIGHTING, lighting);
         colorTechnique.setProperty(RenderProperty.DEPTH_Z_CONST, 1.0f);
         colorTechnique.setProperty(RenderProperty.DEPTH_Z_FACTOR, 1.0f);
-
         colorTechnique.applyConstantProperties();
 
         textureTechnique.setProperty(RenderProperty.PROJECTION_LINEAR_DEPTH, projection.getLinearDepth());
