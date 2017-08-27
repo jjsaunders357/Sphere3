@@ -64,7 +64,7 @@ public class Sphere3Renderer extends GameRenderer
         textureTechnique = glCache.buildTechnique(SphereTextureMaterialTechnique.class);
 
         lighting = new Lighting(new float[]{0.2f, 0.2f, 0.2f, 1.0f}, new float[]{-3, 3, 0, 1}, new float[]{1.0f, 1.0f, 1.0f, 1.0f});
-        simpleRenderer = new SimpleRenderer();
+        simpleRenderer = new SimpleRenderer(colorTechnique, textureTechnique);
 
         objectManager = new ObjectManager();
 
@@ -96,6 +96,7 @@ public class Sphere3Renderer extends GameRenderer
         //Must use front face given we look down the +z-axis in the neutral position (opposite of OpenGL standard).
         GLES20.glCullFace(GLES20.GL_BACK);
         GLES20.glEnable(GLES20.GL_CULL_FACE);
+        simpleRenderer.add(objects);
     }
 
     @Override
@@ -106,19 +107,13 @@ public class Sphere3Renderer extends GameRenderer
         GLES20.glViewport(0, 0, getSurfaceWidth(), getSurfaceHeight());
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
-        colorTechnique.setProperty(RenderProperty.PROJECTION_MATRIX, projection.getProjectionMatrix());
-        colorTechnique.setProperty(RenderProperty.VIEW_MATRIX, camera.getViewMatrix());
-        colorTechnique.setProperty(RenderProperty.LIGHTING, lighting);
-        colorTechnique.setProperty(RenderProperty.DEPTH_Z_CONST, 1.0f);
-        colorTechnique.setProperty(RenderProperty.DEPTH_Z_FACTOR, 1.0f);
-        colorTechnique.applyConstantProperties();
-
-        textureTechnique.setProperty(RenderProperty.PROJECTION_LINEAR_DEPTH, projection.getLinearDepth());
-        textureTechnique.setProperty(RenderProperty.VIEW_MATRIX, camera.getViewMatrix());
-        textureTechnique.setProperty(RenderProperty.LIGHTING, lighting);
-        textureTechnique.applyConstantProperties();
-
-        simpleRenderer.add(objects);
+        simpleRenderer.setConstantProperty(RenderProperty.PROJECTION_LINEAR_DEPTH, projection.getLinearDepth());
+        simpleRenderer.setConstantProperty(RenderProperty.PROJECTION_MATRIX, projection.getProjectionMatrix());
+        simpleRenderer.setConstantProperty(RenderProperty.VIEW_MATRIX, camera.getViewMatrix());
+        simpleRenderer.setConstantProperty(RenderProperty.LIGHTING, lighting);
+        simpleRenderer.setConstantProperty(RenderProperty.DEPTH_Z_CONST, 1.0f);
+        simpleRenderer.setConstantProperty(RenderProperty.DEPTH_Z_FACTOR, 1.0f);
+        simpleRenderer.applyConstantProperties();
         simpleRenderer.render();
         GLES20.glFinish();
     }
