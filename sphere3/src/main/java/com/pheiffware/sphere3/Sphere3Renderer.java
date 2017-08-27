@@ -109,7 +109,9 @@ public class Sphere3Renderer extends GameRenderer
         colorTechnique.setProperty(RenderProperty.PROJECTION_LINEAR_DEPTH, projection.getLinearDepth());
         colorTechnique.setProperty(RenderProperty.VIEW_MATRIX, camera.getViewMatrix());
         colorTechnique.setProperty(RenderProperty.LIGHTING, lighting);
-        colorTechnique.setProperty(RenderProperty.SHADOW_PROJECTION_MAX_DEPTH, 1.0f);
+        colorTechnique.setProperty(RenderProperty.DEPTH_Z_CONST, 1.0f);
+        colorTechnique.setProperty(RenderProperty.DEPTH_Z_FACTOR, 1.0f);
+
         colorTechnique.applyConstantProperties();
 
         textureTechnique.setProperty(RenderProperty.PROJECTION_LINEAR_DEPTH, projection.getLinearDepth());
