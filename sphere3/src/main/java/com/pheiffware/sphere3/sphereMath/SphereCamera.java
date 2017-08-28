@@ -47,4 +47,16 @@ public class SphereCamera extends Camera
     {
         rotateInput(xInput, yInput, Axis.X, Axis.Y, Axis.W, degreesPerLength);
     }
+
+    public void look()
+    {
+        //Implement look methods.
+        //For shadow mapping, set orientation, at position 0, identically to a Euclidean camera then perform an inverse "translation" to the light's position.
+        // Will have to set up an inverse "translation" matrix based on light's position.
+
+//        Euclidean equivalent
+//        lightCamera.setOrientation(0, 0, 1.0f, 0.0f, -1.0f, 0.0f);
+//        lightCamera.setPosition(renderPosition[0], renderPosition[1], renderPosition[2]);
+
+    }
 }
