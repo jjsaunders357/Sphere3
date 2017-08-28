@@ -3,10 +3,7 @@ package com.pheiffware.sphere3;
 import com.pheiffware.lib.graphics.GraphicsException;
 import com.pheiffware.lib.graphics.managed.program.RenderProperty;
 import com.pheiffware.lib.graphics.managed.program.UniformName;
-import com.pheiffware.lib.graphics.managed.program.shader.ShaderBuilder;
 import com.pheiffware.lib.graphics.managed.texture.Texture;
-
-import java.util.Map;
 
 /**
  * Shades mesh with a textured color and with given lights' settings.  Handles, ambient, diffuse and specular lighting.
@@ -14,9 +11,9 @@ import java.util.Map;
  */
 public class SphereTextureMaterialTechnique extends SphereTechnique3D
 {
-    public SphereTextureMaterialTechnique(ShaderBuilder shaderBuilder, Map<String, Object> localConfig) throws GraphicsException
+    public SphereTextureMaterialTechnique() throws GraphicsException
     {
-        super(shaderBuilder, localConfig, "sphere/vert_texture.glsl", "sphere/frag_texture.glsl");
+        super("sphere/vert_texture.glsl", "sphere/frag_texture.glsl");
     }
 
     public void applyConstantPropertiesImplement()

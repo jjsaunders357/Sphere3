@@ -6,11 +6,11 @@ import com.pheiffware.lib.graphics.GraphicsException;
 import com.pheiffware.lib.graphics.Matrix4;
 import com.pheiffware.lib.graphics.Mesh;
 import com.pheiffware.lib.graphics.managed.GLCache;
+import com.pheiffware.lib.graphics.managed.Technique;
 import com.pheiffware.lib.graphics.managed.engine.ColladaLoader;
 import com.pheiffware.lib.graphics.managed.engine.ObjectManager;
 import com.pheiffware.lib.graphics.managed.program.RenderProperty;
 import com.pheiffware.lib.graphics.managed.program.RenderPropertyValue;
-import com.pheiffware.lib.graphics.managed.program.Technique;
 import com.pheiffware.lib.graphics.managed.texture.Texture2D;
 import com.pheiffware.sphere3.sphereMath.Spherizer;
 
