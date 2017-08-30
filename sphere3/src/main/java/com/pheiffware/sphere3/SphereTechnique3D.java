@@ -3,6 +3,7 @@ package com.pheiffware.sphere3;
 import com.pheiffware.lib.graphics.GraphicsException;
 import com.pheiffware.lib.graphics.Matrix4;
 import com.pheiffware.lib.graphics.ProjectionLinearDepth;
+import com.pheiffware.lib.graphics.Vec4F;
 import com.pheiffware.lib.graphics.managed.light.Lighting;
 import com.pheiffware.lib.graphics.managed.program.ProgramTechnique;
 import com.pheiffware.lib.graphics.managed.program.RenderProperty;
@@ -17,11 +18,18 @@ public abstract class SphereTechnique3D extends ProgramTechnique
     //Used internally to compute values to apply to uniforms
     private final Matrix4 viewModelMatrix = Matrix4.newIdentity();
     private final float[] matColor = new float[4];
-
+    private final Vec4F lightEyePositions;
+    private final Vec4F ambientLightMat;
+    private final Vec4F diffLightMat;
+    private final Vec4F specLightMat;
 
     public SphereTechnique3D(String... shaderPaths) throws GraphicsException
     {
         super(shaderPaths);
+        lightEyePositions = new Vec4F(Lighting.numLightsSupported);
+        ambientLightMat = new Vec4F(1);
+        diffLightMat = new Vec4F(Lighting.numLightsSupported);
+        specLightMat = new Vec4F(Lighting.numLightsSupported);
     }
 
     protected final void setViewModel()
@@ -45,8 +53,8 @@ public abstract class SphereTechnique3D extends ProgramTechnique
     {
         Matrix4 viewMatrix = (Matrix4) getPropertyValue(RenderProperty.VIEW_MATRIX);
         Lighting lighting = (Lighting) getPropertyValue(RenderProperty.LIGHTING);
-        float[] transformedLightPositions = lighting.transformLightPositions(viewMatrix);
-        setUniformValue(UniformName.LIGHT_POS_EYE, transformedLightPositions);
+        lighting.transformLightPositions(lightEyePositions, viewMatrix);
+        setUniformValue(UniformName.LIGHT_POS_EYE, lightEyePositions.getData());
         setUniformValue(UniformName.ON_STATE, lighting.getOnStates());
     }
 
@@ -64,27 +72,34 @@ public abstract class SphereTechnique3D extends ProgramTechnique
         matColor[2] = temp[2];
         final float alpha = temp[3];
 
-        final float[] specMatColor = (float[]) getPropertyValue(RenderProperty.SPEC_MAT_COLOR);
-
         final Lighting lighting = (Lighting) getPropertyValue(RenderProperty.LIGHTING);
-        float[] ambLightMatColor = lighting.calcAmbientMatColor(matColor);
-        float[] lightDiffMatColor = lighting.calcDiffMatColor(matColor);
-        float[] lightSpecColor = lighting.calcSpecMatColor(specMatColor);
-        setUniformValue(UniformName.AMBIENT_LIGHTMAT_COLOR, ambLightMatColor);
-        setUniformValue(UniformName.DIFF_LIGHTMAT_COLOR, lightDiffMatColor);
-        setUniformValue(UniformName.SPEC_LIGHTMAT_COLOR, lightSpecColor);
+        ambientLightMat.copy(lighting.getAmbientLightColor());
+        ambientLightMat.multiplyBy(matColor);
+        diffLightMat.copyAll(lighting.getColors());
+        diffLightMat.multiplyEachBy(new Vec4F(matColor));
+
+        setUniformValue(UniformName.AMBIENT_LIGHTMAT_COLOR, ambientLightMat.getData());
+        setUniformValue(UniformName.DIFF_LIGHTMAT_COLOR, diffLightMat.getData());
         setUniformValue(UniformName.MAT_ALPHA, alpha);
+
+        setSpecLightingColor();
     }
 
     /**
      * Perform specular lighting pre-shader lighting calculations and apply uniforms for meshes with non-constant color (such as those which are textured).
      */
+    /**
+     * Perform specular lighting pre-shader lighting calculations and apply uniforms for meshes with non-constant color (such as those which are textured).
+     */
     protected final void setSpecLightingColor()
     {
-        final float[] specMatColor = (float[]) getPropertyValue(RenderProperty.SPEC_MAT_COLOR);
         final Lighting lighting = (Lighting) getPropertyValue(RenderProperty.LIGHTING);
-        float[] lightSpecColor = lighting.calcSpecMatColor(specMatColor);
-        setUniformValue(UniformName.SPEC_LIGHTMAT_COLOR, lightSpecColor);
+        final float[] specMatColor = (float[]) getPropertyValue(RenderProperty.SPEC_MAT_COLOR);
+
+        specLightMat.copyAll(lighting.getColors());
+        specLightMat.multiplyEachBy(new Vec4F(specMatColor));
+
+        setUniformValue(UniformName.SPEC_LIGHTMAT_COLOR, specLightMat.getData());
     }
 
 
