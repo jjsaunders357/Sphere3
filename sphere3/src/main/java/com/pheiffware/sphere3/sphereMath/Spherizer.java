@@ -63,7 +63,7 @@ public class Spherizer
     private void spherizeVertex(Vec4F position, Vec4F normal)
     {
         //W component is not used.
-        position.setW(0);
+        position.w(0);
         float magnitude = position.magnitude();
         angle.setDegrees(degreesPerLength * magnitude);
 
@@ -71,15 +71,15 @@ public class Spherizer
         position.scaleBy(1f / magnitude);
 
         //Rotate [0,0,0,-1] towards position.  The amount to rotate is determined by the magnitude of the original vector.
-        position.setX(position.x() * angle.sin);
-        position.setY(position.y() * angle.sin);
-        position.setZ(position.z() * angle.sin);
-        position.setW(-1f * angle.cos);
+        position.x(position.x() * angle.sin);
+        position.y(position.y() * angle.sin);
+        position.z(position.z() * angle.sin);
+        position.w(-1f * angle.cos);
 
         //Normal is rotated the same amount towards [0,0,0,1]
-        normal.setX(normal.x() * angle.cos);
-        normal.setY(normal.y() * angle.cos);
-        normal.setZ(normal.z() * angle.cos);
-        normal.setW(1f * angle.sin);
+        normal.x(normal.x() * angle.cos);
+        normal.y(normal.y() * angle.cos);
+        normal.z(normal.z() * angle.cos);
+        normal.w(1f * angle.sin);
     }
 }

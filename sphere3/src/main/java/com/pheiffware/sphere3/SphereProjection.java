@@ -39,7 +39,7 @@ public class SphereProjection
 
     private void updateProjection()
     {
-        yScale = FieldOfViewProjection.scaleFromFOV(verticalFOV);
+        yScale = FieldOfViewProjection.fovToScreenScaleFactor(verticalFOV);
         xScale = aspect * yScale;
     }
 
