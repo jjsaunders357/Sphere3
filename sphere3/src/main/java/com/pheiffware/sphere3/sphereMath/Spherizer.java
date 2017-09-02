@@ -68,7 +68,7 @@ public class Spherizer
         angle.setDegrees(degreesPerLength * magnitude);
 
         //Make position a unit vector
-        position.scale(1f / magnitude);
+        position.scaleBy(1f / magnitude);
 
         //Rotate [0,0,0,-1] towards position.  The amount to rotate is determined by the magnitude of the original vector.
         position.setX(position.x() * angle.sin);

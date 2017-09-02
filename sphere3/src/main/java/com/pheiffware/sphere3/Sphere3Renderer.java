@@ -69,7 +69,7 @@ public class Sphere3Renderer extends GameRenderer
         objectManager = new ObjectManager();
 
         //TODO 1.0 = 2/2: What is the correct length/angle conversion here?
-        loader = new Sphere3ColladaLoader(objectManager, glCache, al, "images", colorTechnique, textureTechnique, (float) (2.05 * 36.0 / (Math.sqrt(3))));
+        loader = new Sphere3ColladaLoader(objectManager, glCache, al, "images", colorTechnique, textureTechnique, (float) (1.05 * 36.0 / (Math.sqrt(3))));
         try
         {
             Map<String, ObjectHandle> primitives = loader.loadCollada("meshes/primitives.dae");
