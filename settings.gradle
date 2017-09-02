@@ -3,3 +3,5 @@ include ':andPheiffLib'
 project(':andPheiffLib').projectDir = new File('../AndPheiffLib/andPheiffLib')
 include ':andPheiffLibDemo'
 project(':andPheiffLibDemo').projectDir = new File('../AndPheiffLib/andPheiffLibDemo')
+include ':anamorphic'
+project(':anamorphic').projectDir = new File('../Anamorphic/anamorphic')
