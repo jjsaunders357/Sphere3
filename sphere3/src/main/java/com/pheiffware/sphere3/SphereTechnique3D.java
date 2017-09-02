@@ -2,7 +2,6 @@ package com.pheiffware.sphere3;
 
 import com.pheiffware.lib.graphics.GraphicsException;
 import com.pheiffware.lib.graphics.Matrix4;
-import com.pheiffware.lib.graphics.ProjectionLinearDepth;
 import com.pheiffware.lib.graphics.Vec4F;
 import com.pheiffware.lib.graphics.managed.light.Lighting;
 import com.pheiffware.lib.graphics.managed.program.ProgramTechnique;
@@ -43,9 +42,9 @@ public abstract class SphereTechnique3D extends ProgramTechnique
 
     protected void setProjection()
     {
-        ProjectionLinearDepth projection = (ProjectionLinearDepth) getPropertyValue(RenderProperty.PROJECTION_LINEAR_DEPTH);
-        setUniformValue(UniformName.PROJECTION_SCALE_X, projection.scaleX);
-        setUniformValue(UniformName.PROJECTION_SCALE_Y, projection.scaleY);
+        SphereProjection projection = (SphereProjection) getPropertyValue(RenderProperty.SPHERE_PROJECTION);
+        setUniformValue(UniformName.PROJECTION_SCALE_X, projection.getXScale());
+        setUniformValue(UniformName.PROJECTION_SCALE_Y, projection.getYScale());
     }
 
 

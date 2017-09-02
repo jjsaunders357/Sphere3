@@ -25,8 +25,10 @@ void main()
 	gl_Position = vec4(
 	    positionEyeSpace.x * projectionScaleX,
 	    positionEyeSpace.y * projectionScaleY,
-	    //TODO 3.0 = 3/1: Must compute value here for clipping purposes.  Suggested option is z-1.  Anything on the front demi-hypersphere will be in clipping space for z and anything in the back will be invsible.
-	    0, //Computed per fragment
+	     //Depth is computed per fragment.  However, this value is still meaningful for clipping.
+	     //Value below will map zValues --> clipSpace: [0,-1] --> [-z,0.0]
+	     //This results in all zValues <0 being clipped, which is appropriate.
+	    -positionEyeSpace.z * (positionEyeSpace.z + 1.0),
     	-positionEyeSpace.z
     );
 }

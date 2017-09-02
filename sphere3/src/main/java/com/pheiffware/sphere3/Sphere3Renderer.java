@@ -10,7 +10,6 @@ import com.pheiffware.lib.and.input.TouchAnalyzer;
 import com.pheiffware.lib.geometry.Transform2D;
 import com.pheiffware.lib.graphics.GraphicsException;
 import com.pheiffware.lib.graphics.Matrix4;
-import com.pheiffware.lib.graphics.Projection;
 import com.pheiffware.lib.graphics.managed.GLCache;
 import com.pheiffware.lib.graphics.managed.Technique;
 import com.pheiffware.lib.graphics.managed.engine.ObjectHandle;
@@ -20,6 +19,8 @@ import com.pheiffware.lib.graphics.managed.light.Lighting;
 import com.pheiffware.lib.graphics.managed.program.GraphicsConfig;
 import com.pheiffware.lib.graphics.managed.program.RenderProperty;
 import com.pheiffware.lib.graphics.managed.techniques.Std3DTechnique;
+import com.pheiffware.lib.graphics.projection.FieldOfViewProjection;
+import com.pheiffware.lib.graphics.projection.Projection;
 import com.pheiffware.lib.utils.dom.XMLParseException;
 import com.pheiffware.sphere3.sphereMath.SphereCamera;
 
@@ -35,7 +36,8 @@ import java.util.Map;
 public class Sphere3Renderer extends GameRenderer
 {
     private SphereCamera camera;
-    private Projection projection;
+    private Projection trashProjection;
+    private SphereProjection projection;
     private ObjectManager objectManager;
     private Sphere3ColladaLoader loader;
     private Lighting lighting;
@@ -55,7 +57,8 @@ public class Sphere3Renderer extends GameRenderer
     {
         objects = new ArrayList<>();
         camera = new SphereCamera();
-        projection = new Projection(90f, 1f, 0.01f, 1.001f, false);
+        trashProjection = new FieldOfViewProjection(90f, 1f, 0.01f, 1.001f);
+        projection = new SphereProjection(90f, 1f);
         camera.moveForward(-20.f);
 
 
@@ -107,8 +110,8 @@ public class Sphere3Renderer extends GameRenderer
         GLES20.glViewport(0, 0, getSurfaceWidth(), getSurfaceHeight());
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
-        simpleRenderer.setConstantProperty(RenderProperty.PROJECTION_LINEAR_DEPTH, projection.getLinearDepth());
-        simpleRenderer.setConstantProperty(RenderProperty.PROJECTION_MATRIX, projection.getProjectionMatrix());
+        simpleRenderer.setConstantProperty(RenderProperty.SPHERE_PROJECTION, projection);
+        simpleRenderer.setConstantProperty(RenderProperty.PROJECTION_MATRIX, trashProjection.getProjectionMatrix());
         simpleRenderer.setConstantProperty(RenderProperty.VIEW_MATRIX, camera.getViewMatrix());
         simpleRenderer.setConstantProperty(RenderProperty.LIGHTING, lighting);
         simpleRenderer.setConstantProperty(RenderProperty.DEPTH_Z_CONST, 1.0f);
