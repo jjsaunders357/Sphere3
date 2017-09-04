@@ -17,6 +17,6 @@ public class Sphere3Fragment extends BaseGameFragment
     @Override
     public GameView onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        return new GameView(getContext(), new Sphere3Renderer(), FilterQuality.MEDIUM, false, true);
+        return new GameView(getContext(), new Sphere3Renderer(), FilterQuality.MEDIUM, true);
     }
 }
